@@ -59,11 +59,26 @@ def is_story_related(text):
     text_lower = text.lower()
     return any(keyword in text_lower for keyword in story_keywords)
 
+def is_child_psychology_related(text):
+    child_psychology_keywords = [
+        'child', 'children', 'kid', 'kids', 'toddler', 'baby', 'infant', 'teenager', 'teen',
+        'parenting', 'parent', 'family', 'development', 'behavior', 'behavioral', 'discipline',
+        'education', 'learning', 'school', 'teacher', 'classroom', 'homework', 'study',
+        'social', 'emotional', 'cognitive', 'physical', 'milestone', 'growth', 'maturity',
+        'tantrum', 'aggression', 'shyness', 'anxiety', 'adhd', 'autism', 'special needs',
+        'play', 'toys', 'games', 'activities', 'creativity', 'imagination', 'friendship',
+        'bullying', 'peer pressure', 'self-esteem', 'confidence', 'independence', 'responsibility',
+        'sleep', 'bedtime', 'eating', 'nutrition', 'screen time', 'technology', 'safety',
+        'therapy', 'counseling', 'intervention', 'support', 'guidance', 'advice'
+    ]
+    text_lower = text.lower()
+    return any(keyword in text_lower for keyword in child_psychology_keywords)
+
 def is_general_related(text):
     # Personal Assistant can handle general topics, so this returns True for most things
-    # unless it's clearly specialized (programming, mental health, science, or story)
+    # unless it's clearly specialized (programming, mental health, science, story, or child psychology)
     return not (is_programming_related(text) or is_mental_health_related(text) or 
-                is_science_related(text) or is_story_related(text))
+                is_science_related(text) or is_story_related(text) or is_child_psychology_related(text))
 
 # Page configuration
 st.set_page_config(page_title="Gemini Chat", page_icon="🤖", layout="wide")
@@ -84,7 +99,7 @@ with st.sidebar:
     st.subheader("AI Role Selection")
     ai_role = st.radio(
         "Select AI Role:",
-        ["Code Generator", "Mental Health Consultant", "Science Buff", "Story Writer", "Personal Assistant"],
+        ["Code Generator", "Mental Health Consultant", "Science Buff", "Story Writer", "Personal Assistant", "Child Psychology"],
         index=0
     )
     
@@ -94,7 +109,8 @@ with st.sidebar:
         "Mental Health Consultant": "You are a mental health consultant. You provide supportive, empathetic responses about mental health, wellness, and emotional support. You are not a replacement for professional therapy.",
         "Science Buff": "You are a science expert. You provide detailed explanations about scientific concepts, research, discoveries, and scientific methodology. You make complex topics accessible and engaging.",
         "Story Writer": "You are a creative story writer. You help with storytelling, creative writing, character development, plot ideas, and narrative techniques. You inspire creativity and imagination.",
-        "Personal Assistant": "You are a helpful personal assistant. You help with productivity, organization, scheduling, general knowledge, and daily tasks. You are friendly and efficient."
+        "Personal Assistant": "You are a helpful personal assistant. You help with productivity, organization, scheduling, general knowledge, and daily tasks. You are friendly and efficient.",
+        "Child Psychology": "You are a child psychology expert. You provide guidance on child development, behavioral issues, parenting strategies, educational approaches, and age-appropriate activities. You focus on healthy child development and positive parenting techniques."
     }
     
     system_instruction = role_instructions[ai_role]
@@ -178,6 +194,8 @@ if user_prompt:
                     answer = "I am a science expert, please select appropriate option from the settings bar."
                 elif ai_role == "Story Writer" and not is_story_related(user_prompt):
                     answer = "I am a story writer, please select appropriate option from the settings bar."
+                elif ai_role == "Child Psychology" and not is_child_psychology_related(user_prompt):
+                    answer = "I am a child psychology expert, please select appropriate option from the settings bar."
                 elif ai_role == "Personal Assistant" and not is_general_related(user_prompt):
                     answer = "I am a personal assistant, please select appropriate option from the settings bar."
                 else:
