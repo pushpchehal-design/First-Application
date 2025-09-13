@@ -74,11 +74,32 @@ def is_child_psychology_related(text):
     text_lower = text.lower()
     return any(keyword in text_lower for keyword in child_psychology_keywords)
 
+def is_physics_related(text):
+    physics_keywords = [
+        'physics', 'mechanics', 'thermodynamics', 'electromagnetism', 'quantum', 'relativity',
+        'force', 'energy', 'momentum', 'velocity', 'acceleration', 'mass', 'weight', 'gravity',
+        'wave', 'frequency', 'amplitude', 'wavelength', 'oscillation', 'vibration', 'resonance',
+        'electric', 'magnetic', 'field', 'charge', 'current', 'voltage', 'resistance', 'capacitance',
+        'optics', 'light', 'photon', 'reflection', 'refraction', 'diffraction', 'interference',
+        'thermodynamics', 'entropy', 'heat', 'temperature', 'pressure', 'volume', 'gas', 'liquid',
+        'solid', 'phase', 'transition', 'kinetic', 'potential', 'conservation', 'law',
+        'einstein', 'newton', 'maxwell', 'schrodinger', 'heisenberg', 'uncertainty', 'principle',
+        'particle', 'atom', 'nucleus', 'electron', 'proton', 'neutron', 'quantum mechanics',
+        'wave function', 'probability', 'superposition', 'entanglement', 'quantum field',
+        'special relativity', 'general relativity', 'space-time', 'black hole', 'big bang',
+        'cosmology', 'astrophysics', 'nuclear', 'radioactive', 'decay', 'fusion', 'fission',
+        'equation', 'formula', 'derivation', 'calculation', 'problem', 'solution', 'theory',
+        'experiment', 'observation', 'measurement', 'unit', 'dimension', 'vector', 'scalar',
+        'tensor', 'matrix', 'differential', 'integral', 'calculus', 'mathematics'
+    ]
+    text_lower = text.lower()
+    return any(keyword in text_lower for keyword in physics_keywords)
+
 def is_general_related(text):
     # Personal Assistant can handle general topics, so this returns True for most things
-    # unless it's clearly specialized (programming, mental health, science, story, or child psychology)
+    # unless it's clearly specialized (programming, mental health, science, story, child psychology, or physics)
     return not (is_programming_related(text) or is_mental_health_related(text) or 
-                is_science_related(text) or is_story_related(text) or is_child_psychology_related(text))
+                is_science_related(text) or is_story_related(text) or is_child_psychology_related(text) or is_physics_related(text))
 
 # Page configuration
 st.set_page_config(page_title="Gemini Chat", page_icon="🤖", layout="wide")
@@ -99,7 +120,7 @@ with st.sidebar:
     st.subheader("AI Role Selection")
     ai_role = st.radio(
         "Select AI Role:",
-        ["Code Generator", "Mental Health Consultant", "Science Buff", "Story Writer", "Personal Assistant", "Child Psychology"],
+        ["Code Generator", "Mental Health Consultant", "Science Buff", "Story Writer", "Personal Assistant", "Child Psychology", "Physics Genius"],
         index=0
     )
     
@@ -110,7 +131,8 @@ with st.sidebar:
         "Science Buff": "You are a science expert. You provide detailed explanations about scientific concepts, research, discoveries, and scientific methodology. You make complex topics accessible and engaging.",
         "Story Writer": "You are a creative story writer. You help with storytelling, creative writing, character development, plot ideas, and narrative techniques. You inspire creativity and imagination.",
         "Personal Assistant": "You are a helpful personal assistant. You help with productivity, organization, scheduling, general knowledge, and daily tasks. You are friendly and efficient.",
-        "Child Psychology": "You are a child psychology expert. You provide guidance on child development, behavioral issues, parenting strategies, educational approaches, and age-appropriate activities. You focus on healthy child development and positive parenting techniques."
+        "Child Psychology": "You are a child psychology expert. You provide guidance on child development, behavioral issues, parenting strategies, educational approaches, and age-appropriate activities. You focus on healthy child development and positive parenting techniques.",
+        "Physics Genius": "You are a physics genius and expert. You provide deep insights into physics concepts, solve complex problems, explain theoretical frameworks, and help with mathematical derivations. You excel at classical mechanics, quantum mechanics, thermodynamics, electromagnetism, relativity, and modern physics. You make advanced physics accessible through clear explanations and examples."
     }
     
     system_instruction = role_instructions[ai_role]
@@ -196,6 +218,8 @@ if user_prompt:
                     answer = "I am a story writer, please select appropriate option from the settings bar."
                 elif ai_role == "Child Psychology" and not is_child_psychology_related(user_prompt):
                     answer = "I am a child psychology expert, please select appropriate option from the settings bar."
+                elif ai_role == "Physics Genius" and not is_physics_related(user_prompt):
+                    answer = "I am a physics genius, please select appropriate option from the settings bar."
                 elif ai_role == "Personal Assistant" and not is_general_related(user_prompt):
                     answer = "I am a personal assistant, please select appropriate option from the settings bar."
                 else:
