@@ -28,9 +28,9 @@ with st.sidebar:
     api_key = st.text_input("GEMINI_API_KEY", type="password", 
                            value=os.getenv("GEMINI_API_KEY", ""))
     
-    # Model selection
+    # Model selection (prioritizing free tier friendly models)
     model_name = st.selectbox("Model", 
-                             ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.5-flash"])
+                             ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.5-flash", "gemini-1.5-pro", "gemini-2.5-pro"])
     
     # System instruction for space focus
     system_instruction = st.text_area(
